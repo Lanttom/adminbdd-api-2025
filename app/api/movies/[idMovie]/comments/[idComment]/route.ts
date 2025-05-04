@@ -17,47 +17,66 @@ type Params = {
  * @swagger
  * /api/movies/{idMovie}/comments/{idComment}:
  *   get:
- *     summary: Get a comment by ID
- *     description: Retrieve a specific comment by ID.
+ *     summary: Get a specific comment of a movie
+ *     description: Retrieve a specific comment associated with a movie using comment ID and movie ID.
  *     parameters:
  *       - in: path
  *         name: idMovie
  *         required: true
  *         schema:
  *           type: string
+ *         description: The ID of the movie.
  *       - in: path
  *         name: idComment
  *         required: true
  *         schema:
  *           type: string
+ *         description: The ID of the comment.
  *     responses:
  *       200:
- *         description: Comment found
+ *         description: Comment found and returned successfully.
  *       400:
- *         description: Invalid ID
+ *         description: Invalid ID format.
  *       404:
- *         description: Comment not found
+ *         description: Comment not found.
  *       500:
- *         description: Internal server error
+ *         description: Internal Server Error.
  */
-export async function GET(_: NextRequest, { params }: Params) {
+
+export async function GET(request: Request,{ params }: { params: any }): Promise<NextResponse> {
   try {
-    const { idComment } = params;
-
-    if (!ObjectId.isValid(idComment))
-      return NextResponse.json({ status: 400, message: 'Invalid comment ID' });
-
+    const { idMovie, idComment } = params;
     const client: MongoClient = await clientPromise;
     const db: Db = client.db('sample_mflix');
 
-    const comment = await db.collection('comments').findOne({ _id: new ObjectId(idComment) });
+    if (!ObjectId.isValid(idMovie) || !ObjectId.isValid(idComment)) {
+      return NextResponse.json(
+        { message: 'Invalid ID format' },
+        { status: 400 }
+      );
+    }
 
-    if (!comment)
-      return NextResponse.json({ status: 404, message: 'Comment not found' });
+    const comment = await db.collection('comments').findOne({
+      _id: new ObjectId(idComment),
+      movie_id: new ObjectId(idMovie),
+    });
 
-    return NextResponse.json({ status: 200, data: comment });
+    if (!comment) {
+      return NextResponse.json(
+        { message: 'Comment not found' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(
+      { data: comment },
+      { status: 200 }
+    );
   } catch (error: any) {
-    return NextResponse.json({ status: 500, message: error.message });
+    return NextResponse.json(
+      { message: 'Internal Server Error', error: error.message },
+      { status: 500 }
+    );
   }
 }
 
