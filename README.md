@@ -1,18 +1,19 @@
 <<<<<<< HEAD
 # 📘 README – Projet API AdminBDD (Next.js + MongoDB + Swagger)
 
-Ce projet est une API RESTful construite avec **Next.js**, connectée à une base **MongoDB Atlas**, documentée avec **Swagger**, et répondant au cahier des charges du module **BDOE633 – Administration et Optimisation des Données**.
+Ce projet est une API RESTful construite avec **Next.js**, connectée à une base **MongoDB Atlas**, documentée avec **Swagger**, et développée dans le cadre du module **BDOE633 – Administration et Optimisation des Données**.
+
+> À l’ouverture du site, l’utilisateur est automatiquement redirigé vers la documentation Swagger.
 
 ---
 
 ## 🔗 Liens
 
-| Ressource                | Lien                                                                                             |
-| ------------------------ | ------------------------------------------------------------------------------------------------ |
-| 📦 Dépôt GitHub          | [https://github.com/brikodepo/adminbdd-api-2025](https://github.com/brikodepo/adminbdd-api-2025) |
-| 🌐 API déployée (Vercel) | [https://adminbdd-espi-api.vercel.app](https://adminbdd-api-2025.vercel.app/)                    |
-| 📚 Swagger documentation | [https://adminbdd-espi-api.vercel.app/api-doc](https://adminbdd-espi-api.vercel.app/api-doc)     |
-
+| Ressource                | Lien                                                                                                               |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| 📦 Dépôt GitHub          | [https://github.com/Lanttom/adminbdd-api-2025](https://github.com/Lanttom/adminbdd-api-2025)                      |
+| 🌐 API déployée (Vercel) | [https://adminbdd-api-2025-git-main-antonys-projects-8b15630d.vercel.app](https://adminbdd-api-2025-git-main-antonys-projects-8b15630d.vercel.app) |
+| 📚 Swagger documentation | [https://adminbdd-api-2025-git-main-antonys-projects-8b15630d.vercel.app/api-doc](https://adminbdd-api-2025-git-main-antonys-projects-8b15630d.vercel.app/api-doc) |
 ---
 
 ## 📌 Résumé des Endpoints
