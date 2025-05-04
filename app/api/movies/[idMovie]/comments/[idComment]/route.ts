@@ -1,12 +1,17 @@
 // app/api/movies/[idMovie]/comments/[idComment]/route.ts
 
-import { NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import clientPromise from '@/lib/mongodb';
 import { MongoClient, Db, ObjectId } from 'mongodb';
 
-const AUTHOR_ID = 'Antony lozano'; // ID utilisateur en dur
+const AUTHOR_ID = 'Antony lozano';
 
-type Params = Record<'idMovie' | 'idComment', string>;
+type Params = {
+  params: {
+    idMovie: string;
+    idComment: string;
+  };
+};
 
 /**
  * @swagger
@@ -35,7 +40,7 @@ type Params = Record<'idMovie' | 'idComment', string>;
  *       500:
  *         description: Internal server error
  */
-export async function GET(_: Request, { params }: { params: Params }) {
+export async function GET(_: NextRequest, { params }: Params) {
   try {
     const { idComment } = params;
     if (!ObjectId.isValid(idComment)) {
@@ -46,7 +51,6 @@ export async function GET(_: Request, { params }: { params: Params }) {
     const db: Db = client.db('sample_mflix');
 
     const comment = await db.collection('comments').findOne({ _id: new ObjectId(idComment) });
-
     if (!comment) {
       return NextResponse.json({ status: 404, message: 'Comment not found' });
     }
@@ -75,10 +79,9 @@ export async function GET(_: Request, { params }: { params: Params }) {
  *       500:
  *         description: Internal Server Error
  */
-export async function POST(_: Request, { params }: { params: Params }) {
+export async function POST(_: NextRequest, { params }: Params) {
   try {
     const { idMovie } = params;
-
     const client: MongoClient = await clientPromise;
     const db: Db = client.db('sample_mflix');
 
@@ -90,12 +93,7 @@ export async function POST(_: Request, { params }: { params: Params }) {
     };
 
     const result = await db.collection('comments').insertOne(comment);
-
-    return NextResponse.json({
-      status: 201,
-      message: 'Comment added',
-      data: { insertedId: result.insertedId }
-    });
+    return NextResponse.json({ status: 201, message: 'Comment added', data: { insertedId: result.insertedId } });
   } catch (error: any) {
     return NextResponse.json({ status: 500, message: 'Internal Server Error', error: error.message });
   }
@@ -128,7 +126,7 @@ export async function POST(_: Request, { params }: { params: Params }) {
  *       500:
  *         description: Internal server error
  */
-export async function PUT(_: Request, { params }: { params: Params }) {
+export async function PUT(_: NextRequest, { params }: Params) {
   try {
     const { idComment } = params;
     if (!ObjectId.isValid(idComment)) {
@@ -180,7 +178,7 @@ export async function PUT(_: Request, { params }: { params: Params }) {
  *       500:
  *         description: Internal server error
  */
-export async function DELETE(_: Request, { params }: { params: Params }) {
+export async function DELETE(_: NextRequest, { params }: Params) {
   try {
     const { idComment } = params;
     if (!ObjectId.isValid(idComment)) {
