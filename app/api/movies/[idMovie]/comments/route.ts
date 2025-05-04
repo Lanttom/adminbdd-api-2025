@@ -25,12 +25,15 @@ import { MongoClient, Db, ObjectId } from 'mongodb';
  *       500:
  *         description: Internal Server Error
  */
-export async function GET(request: Request, { params }: { params: { idMovie: string } }): Promise<NextResponse> {
+export async function GET(_: Request, { params }: { params: any }): Promise<NextResponse> {
   try {
     const { idMovie } = params;
 
     if (!ObjectId.isValid(idMovie)) {
-      return NextResponse.json({ status: 400, message: 'Invalid movie ID', error: 'ID format incorrect' });
+      return NextResponse.json(
+        { message: 'Invalid movie ID', error: 'ID format incorrect' },
+        { status: 400 }
+      );
     }
 
     const client: MongoClient = await clientPromise;
@@ -40,8 +43,14 @@ export async function GET(request: Request, { params }: { params: { idMovie: str
       .find({ movie_id: new ObjectId(idMovie) })
       .toArray();
 
-    return NextResponse.json({ status: 200, data: comments });
+    return NextResponse.json(
+      { data: comments },
+      { status: 200 }
+    );
   } catch (error: any) {
-    return NextResponse.json({ status: 500, message: 'Internal Server Error', error: error.message });
+    return NextResponse.json(
+      { message: 'Internal Server Error', error: error.message },
+      { status: 500 }
+    );
   }
 }
