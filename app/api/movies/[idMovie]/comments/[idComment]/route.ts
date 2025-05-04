@@ -33,7 +33,10 @@ const AUTHOR_ID = 'Antony lozano'; // ID utilisateur en dur
  *       500:
  *         description: Internal server error
  */
-export async function GET(_: Request, { params }: { params: { idMovie: string; idComment: string } }) {
+export async function GET(
+  _: Request,
+  { params }: { params: { idMovie: string; idComment: string } }
+) {
   try {
     const { idComment } = params;
 
@@ -74,7 +77,10 @@ export async function GET(_: Request, { params }: { params: { idMovie: string; i
  *       500:
  *         description: Internal Server Error
  */
-export async function POST(_: Request, { params }: { params: { idMovie: string; idComment: string } }) {
+export async function POST(
+  _: Request,
+  { params }: { params: { idMovie: string; idComment: string } }
+) {
   try {
     const { idMovie } = params;
     const client: MongoClient = await clientPromise;
@@ -130,7 +136,10 @@ export async function POST(_: Request, { params }: { params: { idMovie: string; 
  *       500:
  *         description: Internal server error
  */
-export async function PUT(_: Request, { params }: { params: { idMovie: string; idComment: string } }) {
+export async function PUT(
+  _: Request,
+  { params }: { params: { idMovie: string; idComment: string } }
+) {
   try {
     const { idComment } = params;
 
@@ -192,7 +201,10 @@ export async function PUT(_: Request, { params }: { params: { idMovie: string; i
  *       500:
  *         description: Internal server error
  */
-export async function DELETE(_: Request, { params }: { params: { idMovie: string; idComment: string } }) {
+export async function DELETE(
+  _: Request,
+  { params }: { params: { idMovie: string; idComment: string } }
+) {
   try {
     const { idComment } = params;
 
