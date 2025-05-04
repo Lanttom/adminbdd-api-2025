@@ -8,7 +8,7 @@ Ce projet est une API RESTful construite avec **Next.js**, connectée à une bas
 
 | Ressource                     | Lien                                                             |
 |------------------------------|------------------------------------------------------------------|
-| 📦 Dépôt GitHub              | https://github.com/<ton-user>/adminbdd-espi-api                  |
+| 📦 Dépôt GitHub              | https://github.com/brikodepo/adminbdd-api-2025                  |
 | 🌐 API déployée (Vercel)     | https://adminbdd-espi-api.vercel.app                            |
 | 📚 Swagger documentation     | https://adminbdd-espi-api.vercel.app/api-doc                    |
 
