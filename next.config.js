@@ -1,9 +1,9 @@
-/** @type {import('next').NextConfig} */
+  /** @type {import('next').NextConfig} */
 const nextConfig = {
-    output: 'standalone', // pour Vercel avec des API Routes
+    output: 'standalone', // ✅ Corrige les erreurs ENOENT
     experimental: {
-      serverActions: true // facultatif selon ta version de Next.js
-    }
+      serverActions: {}, // ✅ au lieu de `true` si tu as activé serverActions
+    },
   };
   
   module.exports = nextConfig;
