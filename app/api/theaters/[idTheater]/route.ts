@@ -25,7 +25,7 @@ import type { Db } from 'mongodb';
  *       500:
  *         description: Internal server error
  */
-export async function GET(_: Request, { params }: { params: { idTheater: string } }) {
+export async function GET(_: Request, { params }: { params: any }) {
   try {
     const { idTheater } = params;
     if (!ObjectId.isValid(idTheater)) {
@@ -102,7 +102,7 @@ export async function GET(_: Request, { params }: { params: { idTheater: string 
  *       500:
  *         description: Internal server error
  */
-export async function POST(request: Request, { params }: { params: { idTheater: string } }) {
+export async function POST(request: Request, { params }: { params: any }) {
   try {
     const { idTheater } = params;
     const data = await request.json();
@@ -173,7 +173,7 @@ export async function POST(request: Request, { params }: { params: { idTheater: 
  *       500:
  *         description: Internal server error
  */
-export async function PUT(request: Request, { params }: { params: { idTheater: string } }) {
+export async function PUT(request: Request, { params }: { params: any }) {
   try {
     const { idTheater } = params;
     const data = await request.json();
@@ -208,7 +208,7 @@ export async function PUT(request: Request, { params }: { params: { idTheater: s
  *       500:
  *         description: Internal server error
  */
-export async function DELETE(_: Request, { params }: { params: { idTheater: string } }) {
+export async function DELETE(_: Request, { params }: { params: any }) {
   try {
     const { idTheater } = params;
 
