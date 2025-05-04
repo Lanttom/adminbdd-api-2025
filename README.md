@@ -76,19 +76,8 @@ curl https://adminbdd-espi-api.vercel.app/api/movies/search?q=inception
 
 ---
 
-## 📤 Modalités de rendu
 
-- **📅 Date limite :** Lundi 05 mai avant 8h00
-- **✉️ Mail à envoyer à :** [julien.couraud@mail-formateur.net](mailto:julien.couraud@mail-formateur.net)
-- **Objet :** `[B3ASRBD-BDD] Nom Prénom`
-- **Contenu du mail :**
-  - ✔️ Lien vers le dépôt GitHub
-  - ✔️ URL de l’API sur Vercel
-  - ✔️ Ce fichier README.md ou sa version PDF
-
----
-
-Développé par : **Nom Prénom** – ESPI B3 2025
+Développé par : **LOZANO ANTONY & REZÉ Rémi** – ESPI B3 2025
 
 ---
 
