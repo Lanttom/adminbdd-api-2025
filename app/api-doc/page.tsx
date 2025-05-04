@@ -1,5 +1,6 @@
+// app/api-doc/page.tsx
 
-//app/api-doc/page.tsx
+export const dynamic = 'force-dynamic';
 
 import { getApiDocs } from "@/lib/swagger";
 import ReactSwagger from "./react-swagger";
