@@ -6,6 +6,8 @@ import { MongoClient, Db, ObjectId } from 'mongodb';
 
 const AUTHOR_ID = 'Antony lozano'; // ID utilisateur en dur
 
+type Params = Record<'idMovie' | 'idComment', string>;
+
 /**
  * @swagger
  * /api/movies/{idMovie}/comments/{idComment}:
@@ -33,26 +35,26 @@ const AUTHOR_ID = 'Antony lozano'; // ID utilisateur en dur
  *       500:
  *         description: Internal server error
  */
-export async function GET(
-  _: Request,
-  { params }: { params: { [key: string]: string | string[] } }
-) {
-  const idComment = params.idComment as string;
+export async function GET(_: Request, { params }: { params: Params }) {
+  try {
+    const { idComment } = params;
+    if (!ObjectId.isValid(idComment)) {
+      return NextResponse.json({ status: 400, message: 'Invalid comment ID' });
+    }
 
-  if (!ObjectId.isValid(idComment)) {
-    return NextResponse.json({ status: 400, message: 'Invalid comment ID' });
+    const client: MongoClient = await clientPromise;
+    const db: Db = client.db('sample_mflix');
+
+    const comment = await db.collection('comments').findOne({ _id: new ObjectId(idComment) });
+
+    if (!comment) {
+      return NextResponse.json({ status: 404, message: 'Comment not found' });
+    }
+
+    return NextResponse.json({ status: 200, data: comment });
+  } catch (error: any) {
+    return NextResponse.json({ status: 500, message: 'Internal Server Error', error: error.message });
   }
-
-  const client: MongoClient = await clientPromise;
-  const db: Db = client.db('sample_mflix');
-
-  const comment = await db.collection('comments').findOne({ _id: new ObjectId(idComment) });
-
-  if (!comment) {
-    return NextResponse.json({ status: 404, message: 'Comment not found' });
-  }
-
-  return NextResponse.json({ status: 200, data: comment });
 }
 
 /**
@@ -73,29 +75,30 @@ export async function GET(
  *       500:
  *         description: Internal Server Error
  */
-export async function POST(
-  _: Request,
-  { params }: { params: { [key: string]: string | string[] } }
-) {
-  const idMovie = params.idMovie as string;
+export async function POST(_: Request, { params }: { params: Params }) {
+  try {
+    const { idMovie } = params;
 
-  const client: MongoClient = await clientPromise;
-  const db: Db = client.db('sample_mflix');
+    const client: MongoClient = await clientPromise;
+    const db: Db = client.db('sample_mflix');
 
-  const comment = {
-    movie_id: new ObjectId(idMovie),
-    author: AUTHOR_ID,
-    text: 'Super film !',
-    date: new Date()
-  };
+    const comment = {
+      movie_id: new ObjectId(idMovie),
+      author: AUTHOR_ID,
+      text: 'Super film !',
+      date: new Date()
+    };
 
-  const result = await db.collection('comments').insertOne(comment);
+    const result = await db.collection('comments').insertOne(comment);
 
-  return NextResponse.json({
-    status: 201,
-    message: 'Comment added',
-    data: { insertedId: result.insertedId }
-  });
+    return NextResponse.json({
+      status: 201,
+      message: 'Comment added',
+      data: { insertedId: result.insertedId }
+    });
+  } catch (error: any) {
+    return NextResponse.json({ status: 500, message: 'Internal Server Error', error: error.message });
+  }
 }
 
 /**
@@ -125,34 +128,29 @@ export async function POST(
  *       500:
  *         description: Internal server error
  */
-export async function PUT(
-  _: Request,
-  { params }: { params: { [key: string]: string | string[] } }
-) {
-  const idComment = params.idComment as string;
-
-  if (!ObjectId.isValid(idComment)) {
-    return NextResponse.json({ status: 400, message: 'Invalid comment ID' });
-  }
-
-  const client: MongoClient = await clientPromise;
-  const db: Db = client.db('sample_mflix');
-
-  const result = await db.collection('comments').updateOne(
-    { _id: new ObjectId(idComment) },
-    {
-      $set: {
-        text: 'Commentaire modifié',
-        updated_at: new Date()
-      }
+export async function PUT(_: Request, { params }: { params: Params }) {
+  try {
+    const { idComment } = params;
+    if (!ObjectId.isValid(idComment)) {
+      return NextResponse.json({ status: 400, message: 'Invalid comment ID' });
     }
-  );
 
-  if (result.matchedCount === 0) {
-    return NextResponse.json({ status: 404, message: 'Comment not found' });
+    const client: MongoClient = await clientPromise;
+    const db: Db = client.db('sample_mflix');
+
+    const result = await db.collection('comments').updateOne(
+      { _id: new ObjectId(idComment) },
+      { $set: { text: 'Commentaire modifié', updated_at: new Date() } }
+    );
+
+    if (result.matchedCount === 0) {
+      return NextResponse.json({ status: 404, message: 'Comment not found' });
+    }
+
+    return NextResponse.json({ status: 200, message: 'Comment updated' });
+  } catch (error: any) {
+    return NextResponse.json({ status: 500, message: 'Internal Server Error', error: error.message });
   }
-
-  return NextResponse.json({ status: 200, message: 'Comment updated' });
 }
 
 /**
@@ -182,24 +180,24 @@ export async function PUT(
  *       500:
  *         description: Internal server error
  */
-export async function DELETE(
-  _: Request,
-  { params }: { params: { [key: string]: string | string[] } }
-) {
-  const idComment = params.idComment as string;
+export async function DELETE(_: Request, { params }: { params: Params }) {
+  try {
+    const { idComment } = params;
+    if (!ObjectId.isValid(idComment)) {
+      return NextResponse.json({ status: 400, message: 'Invalid comment ID' });
+    }
 
-  if (!ObjectId.isValid(idComment)) {
-    return NextResponse.json({ status: 400, message: 'Invalid comment ID' });
+    const client: MongoClient = await clientPromise;
+    const db: Db = client.db('sample_mflix');
+
+    const result = await db.collection('comments').deleteOne({ _id: new ObjectId(idComment) });
+
+    if (result.deletedCount === 0) {
+      return NextResponse.json({ status: 404, message: 'Comment not found' });
+    }
+
+    return NextResponse.json({ status: 200, message: 'Comment deleted' });
+  } catch (error: any) {
+    return NextResponse.json({ status: 500, message: 'Internal Server Error', error: error.message });
   }
-
-  const client: MongoClient = await clientPromise;
-  const db: Db = client.db('sample_mflix');
-
-  const result = await db.collection('comments').deleteOne({ _id: new ObjectId(idComment) });
-
-  if (result.deletedCount === 0) {
-    return NextResponse.json({ status: 404, message: 'Comment not found' });
-  }
-
-  return NextResponse.json({ status: 200, message: 'Comment deleted' });
 }
