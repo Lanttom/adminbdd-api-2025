@@ -4,7 +4,14 @@ import { NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
 import { MongoClient, Db, ObjectId } from 'mongodb';
 
-const AUTHOR_ID = 'user-123'; // ID utilisateur en dur
+const AUTHOR_ID = 'Antony lozano'; // ID utilisateur en dur
+
+type Context = {
+  params: {
+    idMovie: string;
+    idComment: string;
+  };
+};
 
 /**
  * @swagger
@@ -33,9 +40,9 @@ const AUTHOR_ID = 'user-123'; // ID utilisateur en dur
  *       500:
  *         description: Internal server error
  */
-export async function GET(request: Request, { params }: { params: { idMovie: string, idComment: string } }): Promise<NextResponse> {
+export async function GET(_: Request, context: Context) {
   try {
-    const { idComment } = params;
+    const { idComment } = context.params;
 
     if (!ObjectId.isValid(idComment)) {
       return NextResponse.json({ status: 400, message: 'Invalid comment ID' });
@@ -56,6 +63,7 @@ export async function GET(request: Request, { params }: { params: { idMovie: str
   }
 }
 
+
 /**
  * @swagger
  * /api/movies/{idMovie}/comments/{idComment}:
@@ -74,9 +82,9 @@ export async function GET(request: Request, { params }: { params: { idMovie: str
  *       500:
  *         description: Internal Server Error
  */
-export async function POST(request: Request, { params }: { params: { idMovie: string } }): Promise<NextResponse> {
+export async function POST(_: Request, context: Context) {
   try {
-    const { idMovie } = params;
+    const { idMovie } = context.params;
     const client: MongoClient = await clientPromise;
     const db: Db = client.db('sample_mflix');
 
@@ -89,9 +97,17 @@ export async function POST(request: Request, { params }: { params: { idMovie: st
 
     const result = await db.collection('comments').insertOne(comment);
 
-    return NextResponse.json({ status: 201, message: 'Comment added', data: { insertedId: result.insertedId } });
+    return NextResponse.json({
+      status: 201,
+      message: 'Comment added',
+      data: { insertedId: result.insertedId }
+    });
   } catch (error: any) {
-    return NextResponse.json({ status: 500, message: 'Internal Server Error', error: error.message });
+    return NextResponse.json({
+      status: 500,
+      message: 'Internal Server Error',
+      error: error.message
+    });
   }
 }
 
@@ -122,9 +138,10 @@ export async function POST(request: Request, { params }: { params: { idMovie: st
  *       500:
  *         description: Internal server error
  */
-export async function PUT(request: Request, { params }: { params: { idComment: string } }): Promise<NextResponse> {
+export async function PUT(_: Request, context: Context) {
   try {
-    const { idComment } = params;
+    const { idComment } = context.params;
+
     if (!ObjectId.isValid(idComment)) {
       return NextResponse.json({ status: 400, message: 'Invalid comment ID' });
     }
@@ -134,7 +151,12 @@ export async function PUT(request: Request, { params }: { params: { idComment: s
 
     const result = await db.collection('comments').updateOne(
       { _id: new ObjectId(idComment) },
-      { $set: { text: 'Commentaire modifié', updated_at: new Date() } }
+      {
+        $set: {
+          text: 'Commentaire modifié',
+          updated_at: new Date()
+        }
+      }
     );
 
     if (result.matchedCount === 0) {
@@ -143,7 +165,11 @@ export async function PUT(request: Request, { params }: { params: { idComment: s
 
     return NextResponse.json({ status: 200, message: 'Comment updated' });
   } catch (error: any) {
-    return NextResponse.json({ status: 500, message: 'Internal Server Error', error: error.message });
+    return NextResponse.json({
+      status: 500,
+      message: 'Internal Server Error',
+      error: error.message
+    });
   }
 }
 
@@ -174,9 +200,10 @@ export async function PUT(request: Request, { params }: { params: { idComment: s
  *       500:
  *         description: Internal server error
  */
-export async function DELETE(request: Request, { params }: { params: { idComment: string } }): Promise<NextResponse> {
+export async function DELETE(_: Request, context: Context) {
   try {
-    const { idComment } = params;
+    const { idComment } = context.params;
+
     if (!ObjectId.isValid(idComment)) {
       return NextResponse.json({ status: 400, message: 'Invalid comment ID' });
     }
@@ -192,6 +219,10 @@ export async function DELETE(request: Request, { params }: { params: { idComment
 
     return NextResponse.json({ status: 200, message: 'Comment deleted' });
   } catch (error: any) {
-    return NextResponse.json({ status: 500, message: 'Internal Server Error', error: error.message });
+    return NextResponse.json({
+      status: 500,
+      message: 'Internal Server Error',
+      error: error.message
+    });
   }
 }
