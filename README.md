@@ -77,7 +77,7 @@ curl https://adminbdd-espi-api.vercel.app/api/movies/search?q=inception
 ---
 
 
-Développé par : **LOZANO ANTONY & REZÉ Rémi** – ESPI B3 2025
+Développé par : **LOZANO Antony & REZÉ Rémi** – ESPI B3 2025
 
 ---
 
